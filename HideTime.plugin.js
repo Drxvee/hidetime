@@ -2,7 +2,8 @@
  * @name HideTime
  * @author Drxve
  * @description Hide the messages time by pressing keybind.
- * @version 1.0.0
+ *  @updateUrl https://raw.githubusercontent.com/Drxvee/hidetime/refs/heads/main/HideTime.plugin.js
+ * @version 1.0.1
  */
 
 module.exports = class MyPlugin {
@@ -41,6 +42,7 @@ module.exports = class MyPlugin {
   }
 
   toggleTimeFormat() {
+    // Toggle time elements
     const timeElements = document.querySelectorAll('time');
     timeElements.forEach((timeElement) => {
       const datetime = timeElement.getAttribute('datetime');
@@ -52,21 +54,13 @@ module.exports = class MyPlugin {
       }
     });
 
-    const dailyUpdateElements = document.querySelectorAll('.divider_d5deea.hasContent_d5deea.divider_fc5f50.hasContent_fc5f50');
-    dailyUpdateElements.forEach((dailyUpdateElement) => {
-      const dateText = dailyUpdateElement.getAttribute('aria-label');
-      const dateParts = dateText.split(', ');
-      const year = dateParts[1];
-      const datePartz = dateParts[0].split(' ');
-      const month = datePartz[0];
-      const day = datePartz[1];
-      console.log(`${month} ${day}, ${year}`);
-      const date = new Date(`${month} ${day}, ${year}`);
-      const relativeTime = this.getRelativeTimeFromDailyUpdate(date);
+    // Toggle separators (daily update elements)
+    const separators = document.querySelectorAll('[role="separator"]');
+    separators.forEach((separator) => {
       if (this.enabled) {
-        dailyUpdateElement.querySelector('.content_fc5f50').textContent = relativeTime;
+        separator.style.display = 'none';
       } else {
-        dailyUpdateElement.querySelector('.content_fc5f50').textContent = dateText;
+        separator.style.display = '';
       }
     });
   }
@@ -106,20 +100,6 @@ module.exports = class MyPlugin {
       return `${seconds}s${seconds > 1 ? '' : ''} ago`;
     } else {
       return 'A moment ago';
-    }
-  }
-
-  getRelativeTimeFromDailyUpdate(date) {
-    const now = new Date();
-    const diff = now - date;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (days === 1) {
-      return 'Yesterday';
-    } else if (days > 1) {
-      return `${days}d ago`;
-    } else {
-      return 'Today';
     }
   }
 };

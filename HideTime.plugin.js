@@ -2,7 +2,7 @@
  * @name HideTime
  * @author Drxve
  * @description Hide the messages time by pressing keybind.
- *  @updateUrl https://raw.githubusercontent.com/Drxvee/hidetime/refs/heads/main/HideTime.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/Drxvee/hidetime/refs/heads/main/HideTime.plugin.js
  * @version 1.0.1
  */
 

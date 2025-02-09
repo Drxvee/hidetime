@@ -8,7 +8,7 @@
  */
 
 const DEFAULT_SETTINGS = {
-  key: "F10", // Default keybind
+  key: "F10", // Default keybind, check plugins settings to change this
 };
 
 class HideTime {
@@ -20,77 +20,7 @@ class HideTime {
     this.settings = { ...DEFAULT_SETTINGS, ...BdApi.Data.load("HideTime", "settings") };
   }
 
-  getVersion() {
-    return "1.0.2";
-  }
-
-  async autoupdate() {
-    const pluginName = "HideTime";
-    const currentVersion = this.getVersion();
-    const updateUrl = "https://raw.githubusercontent.com/Drxvee/hidetime/main/HideTime.plugin.js";
-  
-    try {
-      const response = await fetch(updateUrl);
-      const data = await response.text();
-      const latestVersionMatch = data.match(/@version\s+([\d.]+)/);
-  
-      if (!latestVersionMatch) {
-        console.error(`[${pluginName}] Failed to parse latest version.`);
-        return;
-      }
-  
-      const latestVersion = latestVersionMatch[1];
-  
-      if (latestVersion > currentVersion) {
-        console.log(`[${pluginName}] Update available: v${latestVersion}`);
-  
-        BdApi.UI.showNotice(
-          `An update for ${pluginName} is available (v${latestVersion}).`,
-          {
-            type: "info",
-            buttons: [
-              {
-                label: "Update",
-                onClick: async () => {
-                  // For 
-                  await this.downloadAndReplacePlugin(updateUrl);
-                },
-              },
-            ],
-          }
-        );
-      } else {
-        console.log(`[${pluginName}] No updates available.`);
-      }
-    } catch (error) {
-      console.error(`[${pluginName}] Failed to check for updates:`, error);
-      BdApi.UI.showNotice("Failed to check for updates. Please try again later.", { type: "error" });
-    }
-  }
-
-  async downloadAndReplacePlugin(updateUrl) {
-    try {
-      const response = await fetch(updateUrl);
-      const data = await response.text();
-      const pluginPath = require('path').join(BdApi.Plugins.folder, 'HideTime.plugin.js');
-
-      require('fs').writeFile(pluginPath, data, (error) => {
-        if (error) {
-          console.error(`[HideTime] Failed to update plugin:`, error);
-          BdApi.alert('Update Failed', 'Failed to update the plugin.');
-        } else {
-          BdApi.alert('Update Successful', 'The plugin has been updated. Please restart Discord.');
-        }
-      });
-    } catch (error) {
-      console.error(`[HideTime] Failed to download update:`, error);
-      BdApi.alert('Update Failed', 'Failed to download the update.');
-    }
-  }
-
   start() {
-    this.autoupdate();
-
     this.keyDownHandler = (event) => {
       if (event.key === this.settings.key) {
         this.enabled = !this.enabled;
